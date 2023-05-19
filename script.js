@@ -7,6 +7,9 @@ const boldButton = document.getElementById("bold-btn");
 const italicsButton = document.getElementById("italics-btn");
 const underlineButton = document.getElementById("underline-btn");
 ////
+const textColor = document.getElementById("text-color");
+const bgColor = document.getElementById("bg-color");
+////
 const leftAlignButton = document.getElementById("left-align");
 const centerAlignButton = document.getElementById("center-align");
 const rightAlignButton = document.getElementById("right-align");
@@ -63,6 +66,16 @@ underlineButton.addEventListener("click", () => {
     currentCell.style.textDecoration = "none";
   } else currentCell.style.textDecoration = "underline";
 });
+
+// textColor
+textColor.addEventListener("change",()=>{
+  currentCell.style.color=textColor.value;
+})
+
+// bgColor
+bgColor.addEventListener("change",()=>{
+  currentCell.style.backgroundColor=bgColor.value;
+})
 
 //leftAlign
 leftAlignButton.addEventListener("click", () => {
@@ -125,3 +138,5 @@ function onFocusFunction(event) {
   console.log(currentCell);
   document.getElementById("current-cell").innerText = currentCell.id;
 }
+
+
