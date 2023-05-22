@@ -34,7 +34,29 @@ for (let i = 0; i < rows; i++) {
     matrix[i][j] = {};
   }
 }
-console.log(matrix);
+
+
+function updateMatrix(currentCell) {
+  let obj = {
+    style: currentCell.style.cssText,
+    text: currentCell.innerText,
+    id: currentCell.id, // A1, A2, A3, B1,B2,B3
+  };
+  let id = currentCell.id.split("");
+  // if we go horizontally
+  // id=['A',1]; -> 0,0
+  // id=['B',1]; -> 0,1
+  // id=['C',1]; -> 0,2
+
+  //if we go vertically
+  // id=['A',1]; -> 0,0
+  // id=['A',2]; -> 1,0
+  // id=['A',3]; -> 2,0
+  //eventually I want to this
+  let i = id[1] - 1;
+  let j = id[0].charCodeAt(0) - 65;
+  matrix[i][j] = obj;
+}
 
 // for adding heading in excel sheet;
 for (let col = 65; col <= 90; col++) {
@@ -56,9 +78,16 @@ for (let row = 1; row <= 100; row++) {
     td.setAttribute("id", `${String.fromCharCode(col + 64)}${row}`);
     // this is the event listener
     td.addEventListener("focus", (event) => onFocusFunction(event));
+    td.addEventListener("input",(event)=> onInputFunction(event));
     tr.appendChild(td);
   }
   tBody.appendChild(tr);
+}
+
+//onInputFunction
+function onInputFunction(event){
+  updateMatrix(event.target);
+  console.log(matrix);
 }
 
 //BOLD BUTTON
@@ -66,6 +95,9 @@ boldButton.addEventListener("click", () => {
   if (currentCell.style.fontWeight == "bold") {
     currentCell.style.fontWeight = "normal";
   } else currentCell.style.fontWeight = "bold";
+
+///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 //Italics button
@@ -73,6 +105,9 @@ italicsButton.addEventListener("click", () => {
   if (currentCell.style.fontStyle == "italic") {
     currentCell.style.fontStyle = "normal";
   } else currentCell.style.fontStyle = "italic";
+
+///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 //Underline button
@@ -80,31 +115,49 @@ underlineButton.addEventListener("click", () => {
   if (currentCell.style.textDecoration == "underline") {
     currentCell.style.textDecoration = "none";
   } else currentCell.style.textDecoration = "underline";
+
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 // textColor
 textColor.addEventListener("change",()=>{
   currentCell.style.color=textColor.value;
+
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 })
 
 // bgColor
 bgColor.addEventListener("change",()=>{
   currentCell.style.backgroundColor=bgColor.value;
+
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 })
 
 //leftAlign
 leftAlignButton.addEventListener("click", () => {
   currentCell.style.textAlign = "left";
+
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 //centerAlign
 centerAlignButton.addEventListener("click", () => {
   currentCell.style.textAlign = "center";
+
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 //rightAlign
 rightAlignButton.addEventListener("click", () => {
   currentCell.style.textAlign = "right";
+
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 // fontSize
@@ -119,6 +172,9 @@ fontSize.addEventListener("change", () => {
 // the fontFamily in the left is referencing my styles of currentCell
 fontFamily.addEventListener("change", () => {
   currentCell.style.fontFamily = fontFamily.value;
+
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 // cutButton
@@ -129,6 +185,8 @@ cutButton.addEventListener("click", () => {
   };
   currentCell.style = null;
   currentCell.innerText = "";
+  ///// I need to pass updated currentCell inside updateMatrix;
+  updateMatrix(currentCell);
 });
 
 // copyButton
@@ -144,6 +202,9 @@ pasteButton.addEventListener("click", () => {
   if (cutValue.text) {
     currentCell.style = cutValue.style;
     currentCell.innerText = cutValue.text;
+
+    ///// I need to pass updated currentCell inside updateMatrix;
+    updateMatrix(currentCell);
   }
 });
 
