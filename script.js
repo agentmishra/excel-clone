@@ -20,6 +20,21 @@ const fontFamily = document.getElementById("font-family");
 const cutButton = document.getElementById("cut-button");
 const copyButton = document.getElementById("copy-button");
 const pasteButton = document.getElementById("paste-button");
+//
+// rows
+const rows = 100;
+// col
+const cols=26;
+
+let matrix = new Array(rows);
+
+for (let i = 0; i < rows; i++) {
+  matrix[i] = new Array(cols);
+  for (let j = 0; j < cols; j++) {
+    matrix[i][j] = {};
+  }
+}
+console.log(matrix);
 
 // for adding heading in excel sheet;
 for (let col = 65; col <= 90; col++) {
@@ -138,5 +153,3 @@ function onFocusFunction(event) {
   console.log(currentCell);
   document.getElementById("current-cell").innerText = currentCell.id;
 }
-
-
