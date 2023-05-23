@@ -24,7 +24,7 @@ const pasteButton = document.getElementById("paste-button");
 // rows
 const rows = 100;
 // col
-const cols=26;
+const cols = 26;
 
 let matrix = new Array(rows);
 
@@ -34,7 +34,6 @@ for (let i = 0; i < rows; i++) {
     matrix[i][j] = {};
   }
 }
-
 
 function updateMatrix(currentCell) {
   let obj = {
@@ -78,16 +77,70 @@ for (let row = 1; row <= 100; row++) {
     td.setAttribute("id", `${String.fromCharCode(col + 64)}${row}`);
     // this is the event listener
     td.addEventListener("focus", (event) => onFocusFunction(event));
-    td.addEventListener("input",(event)=> onInputFunction(event));
+    td.addEventListener("input", (event) => onInputFunction(event));
     tr.appendChild(td);
   }
   tBody.appendChild(tr);
 }
 
 //onInputFunction
-function onInputFunction(event){
+function onInputFunction(event) {
   updateMatrix(event.target);
-  console.log(matrix);
+  // console.log(matrix);
+}
+
+// Download function
+function downloadJson() {
+  /// converting my matrix into string
+  const jsonString = JSON.stringify(matrix);
+
+  const blob = new Blob([jsonString], { type: "application/json" });
+
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  // this is file name
+  link.download = "data.json";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+//Upload functionality  /// readJsonFile is a function
+document.getElementById("jsonFile").addEventListener("change", readJsonFile);
+
+function readJsonFile(event) {
+  // here we got our file
+  const file = event.target.files[0];
+  if (file) {
+    // reader object which is instance of FileReader;
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const fileContent = e.target.result;
+      try {
+        const jsonData = JSON.parse(fileContent);
+
+        /// we are not doing anything related to upload;
+        matrix = jsonData;
+        jsonData.forEach((row) => {
+          // cell is cell inside matrix (virtual excel)
+          row.forEach((cell) => {
+            if (cell.id) {
+              // myCell is cell inside my DOM or real Excel
+              var myCell = document.getElementById(cell.id);
+              myCell.innerText = cell.text;
+              myCell.style.cssText = cell.style;
+            }
+          });
+        });
+      } catch (err) {
+        console.log("Error in reading JSON file", err);
+      }
+    };
+    reader.readAsText(file);
+  }
 }
 
 //BOLD BUTTON
@@ -96,7 +149,7 @@ boldButton.addEventListener("click", () => {
     currentCell.style.fontWeight = "normal";
   } else currentCell.style.fontWeight = "bold";
 
-///// I need to pass updated currentCell inside updateMatrix;
+  ///// I need to pass updated currentCell inside updateMatrix;
   updateMatrix(currentCell);
 });
 
@@ -106,7 +159,7 @@ italicsButton.addEventListener("click", () => {
     currentCell.style.fontStyle = "normal";
   } else currentCell.style.fontStyle = "italic";
 
-///// I need to pass updated currentCell inside updateMatrix;
+  ///// I need to pass updated currentCell inside updateMatrix;
   updateMatrix(currentCell);
 });
 
@@ -121,20 +174,20 @@ underlineButton.addEventListener("click", () => {
 });
 
 // textColor
-textColor.addEventListener("change",()=>{
-  currentCell.style.color=textColor.value;
+textColor.addEventListener("change", () => {
+  currentCell.style.color = textColor.value;
 
   ///// I need to pass updated currentCell inside updateMatrix;
   updateMatrix(currentCell);
-})
+});
 
 // bgColor
-bgColor.addEventListener("change",()=>{
-  currentCell.style.backgroundColor=bgColor.value;
+bgColor.addEventListener("change", () => {
+  currentCell.style.backgroundColor = bgColor.value;
 
   ///// I need to pass updated currentCell inside updateMatrix;
   updateMatrix(currentCell);
-})
+});
 
 //leftAlign
 leftAlignButton.addEventListener("click", () => {
@@ -190,12 +243,12 @@ cutButton.addEventListener("click", () => {
 });
 
 // copyButton
-copyButton.addEventListener("click",()=>{
+copyButton.addEventListener("click", () => {
   cutValue = {
     style: currentCell.style.cssText,
     text: currentCell.innerText,
   };
-})
+});
 
 //pasteButton
 pasteButton.addEventListener("click", () => {
