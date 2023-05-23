@@ -83,6 +83,11 @@ for (let row = 1; row <= 100; row++) {
   tBody.appendChild(tr);
 }
 
+//define things related to my Sheets
+let numSheets = 1;
+let arrMatrix = [matrix];
+let currSheetNum = 1;
+
 //onInputFunction
 function onInputFunction(event) {
   updateMatrix(event.target);
@@ -264,6 +269,100 @@ pasteButton.addEventListener("click", () => {
 // storing out current cell in currentCell;
 function onFocusFunction(event) {
   currentCell = event.target;
-  console.log(currentCell);
   document.getElementById("current-cell").innerText = currentCell.id;
 }
+
+document.getElementById("add-sheet-btn").addEventListener("click", () => {
+  // logic for adding sheet
+
+  /// logic for saving prevSheets
+  if (numSheets == 1) {
+    var myArr = [matrix];
+    localStorage.setItem("ArrMatrix", JSON.stringify(myArr));
+  } else {
+    var prevSheets = JSON.parse(localStorage.getItem("ArrMatrix"));
+    var updatedSheets = [...prevSheets, matrix];
+    localStorage.setItem("ArrMatrix", JSON.stringify(updatedSheets));
+  }
+
+  ///updateMy number of sheets
+  numSheets++;
+  currSheetNum = numSheets;
+
+  // cleanup my virtual memory of excel which is matrix;
+  for (let i = 0; i < rows; i++) {
+    matrix[i] = new Array(cols);
+    for (let j = 0; j < cols; j++) {
+      matrix[i][j] = {};
+    }
+  }
+
+  // cleaning up excel sheet in HTML;
+  tBody.innerHTML = ``;
+
+  for (let row = 1; row <= 100; row++) {
+    let tr = document.createElement("tr");
+    let th = document.createElement("th");
+    th.innerText = row;
+    tr.appendChild(th);
+    // looping from A to Z;
+    for (let col = 1; col <= 26; col++) {
+      let td = document.createElement("td");
+      td.setAttribute("contenteditable", "true");
+      // colRow -> A1, B1, C1, D1,
+      td.setAttribute("id", `${String.fromCharCode(col + 64)}${row}`);
+      // this is the event listener
+      td.addEventListener("focus", (event) => onFocusFunction(event));
+      td.addEventListener("input", (event) => onInputFunction(event));
+      tr.appendChild(td);
+    }
+    tBody.appendChild(tr);
+  }
+
+  document.getElementById("sheet-num").innerText = "Sheet No. " + currSheetNum;
+});
+
+document.getElementById("sheet-1").addEventListener("click", () => {
+  var myArr = JSON.parse(localStorage.getItem("ArrMatrix"));
+  let tableData = myArr[0];
+  matrix = tableData;
+  tableData.forEach((row) => {
+    row.forEach((cell) => {
+      if (cell.id) {
+        var myCell = document.getElementById(cell.id);
+        myCell.innerText = cell.text;
+        myCell.style.cssText = cell.style;
+      }
+    });
+  });
+});
+
+document.getElementById("sheet-2").addEventListener("click", () => {
+  var myArr = JSON.parse(localStorage.getItem("ArrMatrix"));
+  let tableData = myArr[1];
+  matrix = tableData;
+  tableData.forEach((row) => {
+    row.forEach((cell) => {
+      if (cell.id) {
+        var myCell = document.getElementById(cell.id);
+        myCell.innerText = cell.text;
+        myCell.style.cssText = cell.style;
+      }
+    });
+  });
+});
+
+document.getElementById("sheet-3").addEventListener("click", () => {
+  var myArr = JSON.parse(localStorage.getItem("ArrMatrix"));
+  let tableData = myArr[2];
+  matrix = tableData;
+  tableData.forEach((row) => {
+    row.forEach((cell) => {
+      if (cell.id) {
+        var myCell = document.getElementById(cell.id);
+        myCell.innerText = cell.text;
+        myCell.style.cssText = cell.style;
+      }
+    });
+  });
+});
